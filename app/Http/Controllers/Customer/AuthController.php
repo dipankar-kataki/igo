@@ -40,10 +40,11 @@ class AuthController extends Controller
             }else{
                 $details= User::where('phone', $request->phone)->first();
                 $is_signup_complete = 0;
-                    if($details->name != null){
+                if($details != null){
+
+                    if($details->name != 'null' || $details->name != null){
                         $is_signup_complete = 1;
                     }
-                if($details->phone != null){
                     Cache::forget('otp');
                     $token = $details->createToken('auth_token')->plainTextToken;
                     return $this->success('OTP verified successfully.', $is_signup_complete, $token, 200);
