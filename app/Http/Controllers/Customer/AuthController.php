@@ -38,13 +38,15 @@ class AuthController extends Controller
             if(Cache::get('otp') != $request->otp){
                 return $this->error('Failed to verify OTP. Invalid OTP.', null, 'null', 400);
             }else{
-
-                $phone_number_exists = User::where('phone', $request->phone)->exists();
-                if($phone_number_exists){
+                $details= User::where('phone', $request->phone)->first();
+                $is_signup_complete = 0;
+                    if($details->name != null){
+                        $is_signup_complete = 1;
+                    }
+                if($details->phone != null){
                     Cache::forget('otp');
-                    $user = User::where('phone', $request->phone)->firstOrFail();
-                    $token = $user->createToken('auth_token')->plainTextToken;
-                    return $this->success('OTP verified successfully.', null, $token, 200);
+                    $token = $details->createToken('auth_token')->plainTextToken;
+                    return $this->success('OTP verified successfully.', $is_signup_complete, $token, 200);
                 }else{
                     $create = User::create([
                         'phone' => $request->phone
@@ -53,7 +55,7 @@ class AuthController extends Controller
                         Cache::forget('otp');
                         $user = User::where('phone', $request->phone)->firstOrFail();
                         $token = $user->createToken('auth_token')->plainTextToken;
-                        return $this->success('OTP verified successfully.', null, $token, 201);
+                        return $this->success('OTP verified successfully.', $is_signup_complete, $token, 201);
                     }else{
                         return $this->error('Whoops! Something went wrong', null, 'null', 500);
                     }
