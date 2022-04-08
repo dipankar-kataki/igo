@@ -8,7 +8,6 @@ use App\Models\User;
 use App\Traits\ApiResponser;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
-use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
 {
