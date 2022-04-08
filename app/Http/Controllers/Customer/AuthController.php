@@ -38,7 +38,7 @@ class AuthController extends Controller
             if(Cache::get('otp') != $request->otp){
                 return $this->error('Failed to verify OTP. Invalid OTP.', null, 'null', 400);
             }else{
-                $details= User::where('phone', $request->phone)->first();
+                $details= User::where('phone', $request->phone)->where('role', 1)->first();
                 $is_signup_complete = 0;
                 if($details != null){
 
@@ -50,7 +50,8 @@ class AuthController extends Controller
                     return $this->success('OTP verified successfully.', $is_signup_complete, $token, 200);
                 }else{
                     $create = User::create([
-                        'phone' => $request->phone
+                        'phone' => $request->phone,
+                        'role' => 1
                     ]);
                     if($create){
                         Cache::forget('otp');
@@ -94,11 +95,11 @@ class AuthController extends Controller
                     $file = 'customer/files/profile/' . $new_name;
                 }
 
-                $create = User::where('phone', $request->phone)->update([
+                $create = User::where('phone', $request->phone)->where('role', 1)->update([
                     'name' => $request->name,
                     'email' => $request->email,
                     'photo' => $file,
-                    'gender' => $request->gender
+                    'gender' => $request->gender,
                 ]);
 
                 if($create){

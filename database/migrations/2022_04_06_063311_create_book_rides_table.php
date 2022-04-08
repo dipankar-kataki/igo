@@ -15,6 +15,11 @@ class CreateBookRidesTable extends Migration
     {
         Schema::create('book_rides', function (Blueprint $table) {
             $table->id();
+            $table->string('pickup_loc');
+            $table->string('dest_loc');
+            $table->unsignedBigInteger('customer_id');
+            $table->unsignedBigInteger('captain_id')->nullable();
+            $table->boolean('is_ride_completed');
             $table->timestamps();
         });
     }
