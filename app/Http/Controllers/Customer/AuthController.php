@@ -103,42 +103,12 @@ class AuthController extends Controller
                 ]);
 
                 if($create){
-
-                    $firebaseToken = PersonalAccessToken::whereNotNull('token')->pluck('token')->all();
-            
-                    $SERVER_API_KEY = env('FCM_KEY');
-                
-                    $data = [
-                        "registration_ids" => $firebaseToken,
-                        "notification" => [
-                            "title" => 'Welcome To IGO',
-                            "body" => 'Account created successfull',  
-                        ]
-                    ];
-                    $dataString = json_encode($data);
-                
-                    $headers = [
-                        'Authorization: key=' . $SERVER_API_KEY,
-                        'Content-Type: application/json',
-                    ];
-                
-                    $ch = curl_init();
-                    
-                    curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-                    curl_setopt($ch, CURLOPT_POST, true);
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
-                            
-                    $response = curl_exec($ch);
-                    return $this->success('Signup successfull.', $response, null, 201);
+                    return $this->success('Signup successfull.', null, null, 201);
                 }else{
                     return $this->error('Whoops! Something went wrong', null, 'null', 500);
                 }
             }
             
         }
+      }
 
-    }
-}
